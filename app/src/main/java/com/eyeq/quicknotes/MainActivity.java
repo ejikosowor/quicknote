@@ -1,5 +1,6 @@
 package com.eyeq.quicknotes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -58,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.notes_list_view);
         adapter = new Adapter(this, list);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                intent.putExtra("titleNote", list.get(i).getTitle());
+                intent.putExtra("bodyNote", list.get(i).getBody());
+                startActivity(intent);
+            }
+        });
         listView.setAdapter(adapter);
 
         requestQueue = Volley.newRequestQueue(this);
@@ -78,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 Note noteList = new Note();
                                 noteList.setTitle(jsonObj.get("title").toString());
+                                noteList.setBody(jsonObj.get("body").toString());
                                 noteList.setDate(jsonObj.get("updated_at").toString());
 
                                 list.add(noteList);
